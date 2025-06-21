@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>掛け算ゲーム</title>
+  <link rel="stylesheet" href="../../style.css">
   <style>
     html, body {
       font-family: sans-serif;
@@ -151,91 +152,9 @@
   <div id="score">スコア: 0</div>
   <div id="result"></div>
   <div id="flowers"></div>
+  <script src="game.js"></script>
   <script>
-    let a, b;
-    let score = 0;
-
-    function generateQuestion() {
-      a = Math.floor(Math.random() * 9) + 1;
-      b = Math.floor(Math.random() * 9) + 1;
-      document.getElementById('question').textContent = `${a} × ${b} = ?`;
-      document.getElementById('answerInput').value = '';
-    }
-
-    function checkAnswer() {
-      const input = parseInt(document.getElementById('answerInput').value);
-      const resultDiv = document.getElementById('result');
-      if (!isNaN(input)) {
-        if (input === a * b) {
-          score++;
-          document.getElementById('score').textContent = `スコア: ${score}`;
-          resultDiv.textContent = '正解！';
-          resultDiv.className = 'correct';
-          addFlower(score);
-          if (score % 10 === 0) animateHeat();
-          if (score % 7 === 0) animateBackground();
-        } else {
-          resultDiv.textContent = `不正解！正解は ${a * b}`;
-          resultDiv.className = 'incorrect';
-        }
-        generateQuestion();
-      }
-    }
-
-    function addFlower(currentScore) {
-      const flower = document.createElement('div');
-      flower.className = 'flower';
-      flower.style.left = Math.random() * 95 + 'vw';
-      flower.style.top = Math.random() * 90 + 'vh';
-      flower.style.background = `radial-gradient(circle, hsl(${Math.random()*360}, 100%, 85%), transparent)`;
-      flower.style.width = '50px';
-      flower.style.height = '50px';
-      if (currentScore % 5 === 0) {
-        flower.classList.add('heat');
-      }
-      document.getElementById('flowers').appendChild(flower);
-    }
-
-    function animateHeat() {
-      const heatElements = document.querySelectorAll('.flower');
-      heatElements.forEach(el => {
-        const dx = (Math.random() - 0.5) * 200 + 'px';
-        const dy = (Math.random() - 0.5) * 200 + 'px';
-        el.style.setProperty('--dx', dx);
-        el.style.setProperty('--dy', dy);
-        el.classList.add('move');
-
-        if (Math.random() < 0.3) {
-          el.style.width = '70px';
-          el.style.height = '70px';
-          el.style.boxShadow = '0 0 80px rgba(255, 100, 0, 1)';
-        }
-      });
-    }
-
-    function animateBackground() {
-      document.body.style.backgroundColor = '#ffe6e6';
-      setTimeout(() => {
-        document.body.style.backgroundColor = '#cceeff';
-      }, 500);
-    }
-
-    function appendDigit(digit) {
-      const input = document.getElementById('answerInput');
-      input.value += digit;
-    }
-
-    function clearInput() {
-      document.getElementById('answerInput').value = '';
-    }
-
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter') {
-        checkAnswer();
-      }
-    });
-
-    generateQuestion();
+    setupMultiplication(9);
   </script>
 </body>
 </html>
