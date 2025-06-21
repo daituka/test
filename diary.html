@@ -51,16 +51,17 @@
   <div id="diaryList"></div>
 
   <script>
-    function loadDiary() {
+    async function loadDiary() {
       const list = document.getElementById('diaryList');
       list.innerHTML = '';
-      const entries = JSON.parse(localStorage.getItem('developerDiary') || '[]');
+      const res = await fetch('/api/diary');
+      const entries = await res.json();
       entries.forEach(entry => {
         const div = document.createElement('div');
         div.className = 'entry';
         const date = document.createElement('div');
         date.className = 'date';
-        date.textContent = entry.date;
+        date.textContent = new Date(entry.date).toLocaleString();
         const text = document.createElement('div');
         text.textContent = entry.text;
         div.appendChild(date);
@@ -69,13 +70,15 @@
       });
     }
 
-    document.getElementById('addBtn').addEventListener('click', () => {
+    document.getElementById('addBtn').addEventListener('click', async () => {
       const textarea = document.getElementById('diaryInput');
       const text = textarea.value.trim();
       if (text === '') return;
-      const entries = JSON.parse(localStorage.getItem('developerDiary') || '[]');
-      entries.push({date: new Date().toLocaleString(), text});
-      localStorage.setItem('developerDiary', JSON.stringify(entries));
+      await fetch('/api/diary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
       textarea.value = '';
       loadDiary();
     });
