@@ -12,6 +12,11 @@
       margin: 0;
       padding: 1em;
     }
+    textarea {
+      width: 80%;
+      max-width: 500px;
+      height: 100px;
+    }
     #diaryList {
       margin-top: 1em;
       text-align: left;
@@ -40,7 +45,9 @@
       <li><a href="game/multiplication/simple2.html">掛け算ゲーム2</a></li>
     </ul>
   </nav>
-  <p><a href="diary.html">日記を書く</a></p>
+  <p><a href="index.html">一覧に戻る</a></p>
+  <textarea id="diaryInput" placeholder="今日の作業メモ"></textarea><br>
+  <button id="addBtn">追加</button>
   <div id="diaryList"></div>
 
   <script>
@@ -62,6 +69,16 @@
       });
     }
 
+    document.getElementById('addBtn').addEventListener('click', () => {
+      const textarea = document.getElementById('diaryInput');
+      const text = textarea.value.trim();
+      if (text === '') return;
+      const entries = JSON.parse(localStorage.getItem('developerDiary') || '[]');
+      entries.push({date: new Date().toLocaleString(), text});
+      localStorage.setItem('developerDiary', JSON.stringify(entries));
+      textarea.value = '';
+      loadDiary();
+    });
 
     window.addEventListener('load', loadDiary);
   </script>
